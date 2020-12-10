@@ -16,3 +16,4 @@ class Starship:
             self.type = "Пользовательский"
             self.health = health
             self.image = image
+        self.bober = 0
