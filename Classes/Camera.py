@@ -1,0 +1,47 @@
+import pygame
+
+
+class Camera:
+    def __init__(self, color):
+        self.color = color
+    
+    def fill(self, screen):
+        screen.fill(self.color)
+    
+    def render(self):
+        pygame.display.flip()
+        
+    def drawing(self, screen, objects, center, size): # center - кортеж с x и y камеры
+        # Отрисовка списков словарей
+        for v in objects:
+            img = pygame.image.load(v['image'])
+            img = pygame.transform.scale(img, (int(v['width'] * size),
+                                               int(v['height'] * size)))
+            img = pygame.transform.rotate(img, v['rot'])
+            screen.blit(img, (center[0] + v['x'] * size,
+                              center[1] + v['y'] * size))
+            
+            
+'''if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 500, 500
+    screen = pygame.display.set_mode(size)
+    screen.fill(pygame.Color('black'))
+    
+    cam = Camera(pygame.Color('black'))
+    running = True
+    a = 0.5
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and a < 5:
+                    a += 0.1
+                elif event.button == 3 and a > 0.2:
+                    a -= 0.1
+        cam.fill(screen)
+        cam.drawing(screen, [{"x": -100, "y": 100, "image": "1.png", "width": 100, "height": 150, "rot": 45}, {"x": 100, "y": -100, "image": "2.png", "width": 120, "height": 70, "rot": 55}], (250, 250), a)
+        cam.render()
+    
+    pygame.quit()'''
