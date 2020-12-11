@@ -1,5 +1,50 @@
 import pygame
 
+
+SIZE = (500, 500)
+ZOOM_SENSITIVITY = 1.2
+
+
 class Planet:
-    def __init__(self, radius):
+    def __init__(self, radius, image): # Определения класса
         self.radius = radius
+        self.image = image
+
+    def render(self):
+        pygame.display.flip() # Обновление экрана
+
+    def drawing(self, screen, rotation, zoom, height): # height - высота игрока
+        img = pygame.image.load(self.image)  # Открытие картинки
+        img = pygame.transform.scale(img, (int(self.radius * 2 * zoom),
+                                           int(self.radius * 2 * zoom)))  # Изменение размера картинки
+        img = pygame.transform.rotate(img, -rotation)  # Поворот картинки
+        screen.blit(img, (SIZE[0] / 2 - self.radius * zoom,
+                          SIZE[1] / 2 + height * zoom))
+
+
+# Дальше типа пример
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = SIZE[0], SIZE[1]
+    screen = pygame.display.set_mode(size)
+    screen.fill(pygame.Color('black'))
+
+    planet = Planet(200, 'earth.png')
+    running = True
+    zoom = 1
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    if 4 > zoom * ZOOM_SENSITIVITY > 0.1:
+                        zoom *= ZOOM_SENSITIVITY
+                elif event.button == 5:
+                    if 3 > zoom * (1 / ZOOM_SENSITIVITY) > 0.1:
+                        zoom *= (1 / ZOOM_SENSITIVITY)
+        screen.fill(pygame.Color('black'))
+        planet.drawing(screen, 0, zoom, 0)
+        planet.render()
+
+    pygame.quit()
