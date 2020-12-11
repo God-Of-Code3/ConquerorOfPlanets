@@ -1,0 +1,5 @@
+import pygame
+
+class Planet:
+    def __init__(self, radius):
+        self.radius = radius
