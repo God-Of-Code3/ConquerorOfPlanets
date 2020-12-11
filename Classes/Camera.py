@@ -1,6 +1,9 @@
 import pygame
 
 
+SIZE = (500, 500)
+
+
 class Camera:
     def __init__(self, color): # Определения класса
         self.color = color
@@ -18,13 +21,13 @@ class Camera:
             img = pygame.transform.scale(img, (int(v['width'] * size),
                                                int(v['height'] * size))) # Изменение размера картинки
             img = pygame.transform.rotate(img, v['rot']) # Поворот картинки
-            screen.blit(img, (center[0] + v['x'] * size,
-                              center[1] + v['y'] * size)) # Отрисовка
+            screen.blit(img, (SIZE[0] / 2 + (v['x'] - v['width'] / 2 - center[1]) * size,
+                              SIZE[1] / 2 + (v['y'] - v['height'] / 2 - center[1]) * size)) # Отрисовка
             
 # Дальше типа пример          
 '''if __name__ == '__main__':
     pygame.init()
-    size = width, height = 500, 500
+    size = width, height = SIZE[0], SIZE[1]
     screen = pygame.display.set_mode(size)
     screen.fill(pygame.Color('black'))
     
@@ -41,7 +44,9 @@ class Camera:
                 elif event.button == 3 and a > 0.2:
                     a -= 0.1
         cam.fill(screen)
-        cam.drawing(screen, [{"x": -100, "y": 100, "image": "1.png", "width": 100, "height": 150, "rot": 45}, {"x": 100, "y": -100, "image": "2.png", "width": 120, "height": 70, "rot": 55}], (250, 250), a)
+        cam.drawing(screen, [{"x": -100, "y": 100, "image": "1.png", "width": 100, "height": 150, "rot": 45},
+                             {"x": 100, "y": -100, "image": "2.png", "width": 120, "height": 70, "rot": 55}],
+                    (250, 250), a)
         cam.render()
     
     pygame.quit()'''
