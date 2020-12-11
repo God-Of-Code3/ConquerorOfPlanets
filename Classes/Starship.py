@@ -7,16 +7,16 @@ def check_point(info, x, y):
     s_x = info["x"]
     s_y = info["y"]
     w = info["width"]
-    h = info["height"]
-    r = info["rot"]
+    print(s_x, s_y)
+    print(x, y)
+    return math.sqrt((s_x - x) ** 2 + (s_y - y) ** 2) <= w
 
-    point_x = round(((x - s_x) * math.cos(math.pi / 180 * (-r)) -
-                    (y - s_y) * math.sin(math.pi / 180 * (-r))) * 100) / 100
-    point_y = round(((x - s_x) * math.sin(math.pi / 180 * (-r)) +
-                    (y - s_y) * math.cos(math.pi / 180 * (-r))) * 100) / 100
 
-    return -w/2 <= point_x <= w/2 and -h/2 <= point_y <= h/2
-    # Пишу это в половине первого ночи, как работает эта математика - хз, но она работает
+class Planet:
+    def __init__(self, x, y, radius):
+        self.x = x
+        self.y = y
+        self.radius = radius
 
 
 class Starship:
@@ -50,11 +50,27 @@ class Starship:
         self.y += self.speed_y  # Движение от/к планете
 
     def check_colision(self, other):
-        pass
+        other_coords = other.get_real_coords()
+        intersection = check_point(self.get_info_for_drawing(), other_coords[0], other_coords[1])
 
-    def check_point(self, x, y):
-        points = list()
-        pass
+        return intersection
+
+    def get_points(self):
+        self_points = list()
+        x, y = self.get_real_coords()
+        self_points.append((x-self.width / 2, y-self.height / 2))
+        self_points.append((x+self.width / 2, y-self.height / 2))
+        self_points.append((x+self.width / 2, y+self.height / 2))
+        self_points.append((x-self.width / 2, y+self.height / 2))
+        return self_points
+
+    def get_real_coords(self):
+        start_x = self.planet.x  # Начальный X
+        start_y = self.planet.y  # Начальный Y
+        abs_x = start_x + math.cos((math.pi / 180) * self.x) * (self.y + self.planet.radius)  # Абсолютное значение
+        # X (от левого верхнего края экрана)
+        abs_y = start_y + math.sin((math.pi / 180) * self.x) * (self.y + self.planet.radius)
+        return abs_x, abs_y
 
     def do(self):  # Общий расчет корабля
         self.move()
@@ -62,8 +78,9 @@ class Starship:
     def get_info_for_drawing(self):  # Выдача информации для отрисовки
         start_x = self.planet.x  # Начальный X
         start_y = self.planet.y  # Начальный Y
-        abs_x = start_x + math.cos((math.pi / 180) * self.x)  # Абсолютное значение X (от левого верхнего края экрана)
-        abs_y = start_y + math.sin((math.pi / 180) * self.y)
+        abs_x = start_x + math.cos((math.pi / 180) * self.x) * (self.y + self.planet.radius)  # Абсолютное значение
+        # X (от левого верхнего края экрана)
+        abs_y = start_y + math.sin((math.pi / 180) * self.x) * (self.y + self.planet.radius)
         data = dict()  # Словарь данных
         data["x"] = abs_x
         data["y"] = abs_y
@@ -74,5 +91,7 @@ class Starship:
         return data
 
 
-info = {"x": 0, "y": 0, "width": 2, "height": 2, "rot": 45}
-check_point(info, 1.1, 0)
+planet = Planet(0, 0, 0)
+starship = Starship(0, 10, 2, 5, "Ship1", planet)
+starship2 = Starship(0, 11, 2, 5, "Ship1", planet)
+print(starship.check_colision(starship2))
