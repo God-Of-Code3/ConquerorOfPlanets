@@ -1,5 +1,6 @@
 from Classes.Constants import *
-import math
+from Classes.Math import *
+import pygame
 
 
 def check_point(info, x, y):
@@ -20,7 +21,7 @@ class Planet:
 
 
 class Starship:
-    def __init__(self, x, y, width, height, ship_type, planet, health=1000, image="Ship1.png"):
+    def __init__(self, x, y, width, height, ship_type, planet, health=1000, image="Ship1.png", polygon=[]):
         self.x = x  # Градус относительно "верха" планеты
         self.y = y  # Высота НАД ПОВЕРХНОСТЬЮ ПЛАНЕТЫ
         self.width = width  # Ширина коробля
@@ -31,10 +32,12 @@ class Starship:
             ship = STARSHIPS[ship_type]
             self.health = ship["health"]  # Прочность корабля
             self.image = ship["image"]  # Картинка корабля
+            self.polygon = ship["polygon"]  # Полигон корабля
         else:  # Иначе из переданных значений
             self.type = "Пользовательский"
             self.health = health  # Прочность корабля
             self.image = image  # Картинка корабля
+            self.polygon = polygon.copy()  # Полигон корабля
         self.planet = planet  # Объект планеты
         self.speed_x = 0  # Текущая угловая скорость
         self.speed_y = 0  # Текущая скорость удаления от планеты
@@ -49,20 +52,13 @@ class Starship:
         self.x += self.speed_x  # Движение над планетой
         self.y += self.speed_y  # Движение от/к планете
 
+    def get_my_polygon(self):
+        abs_x, abs_y = self.get_real_coords()
+        return rotate_polygon(abs_x, abs_y, self.polygon, self.x)
+
     def check_colision(self, other):
-        other_coords = other.get_real_coords()
-        intersection = check_point(self.get_info_for_drawing(), other_coords[0], other_coords[1])
-
+        intersection = check_intersection(self.get_my_polygon(), other.get_my_polygon())
         return intersection
-
-    def get_points(self):
-        self_points = list()
-        x, y = self.get_real_coords()
-        self_points.append((x-self.width / 2, y-self.height / 2))
-        self_points.append((x+self.width / 2, y-self.height / 2))
-        self_points.append((x+self.width / 2, y+self.height / 2))
-        self_points.append((x-self.width / 2, y+self.height / 2))
-        return self_points
 
     def get_real_coords(self):
         start_x = self.planet.x  # Начальный X
@@ -91,7 +87,21 @@ class Starship:
         return data
 
 
-planet = Planet(0, 0, 0)
-starship = Starship(0, 10, 2, 5, "Ship1", planet)
-starship2 = Starship(0, 11, 2, 5, "Ship1", planet)
-print(starship.check_colision(starship2))
+planet = Planet(250, 250, 0)
+starship = Starship(0, 110, 2, 5, "Ship1", planet)
+starship2 = Starship(45, 110, 2, 5, "Ship1", planet)
+
+
+pygame.init()
+screen = pygame.display.set_mode((500, 500))
+while True:
+    screen.fill((0, 0, 0))
+    inter = starship.check_colision(starship2)
+    color = (255, 0, 0) if inter else (255, 255, 255)
+    print(starship.get_real_coords())
+    pygame.draw.polygon(screen, color, starship.get_my_polygon(), 2)
+    pygame.draw.polygon(screen, color, starship2.get_my_polygon(), 2)
+    starship.x += 0.02
+    starship2.x += 0.04
+    pygame.display.flip()
+    pygame.event.get()
