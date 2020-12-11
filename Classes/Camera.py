@@ -3,7 +3,7 @@ import pygame
 
 SIZE = (500, 500)
 SENSITIVITY = 2
-ZOOM_SENSITIVITY = 2
+ZOOM_SENSITIVITY = 1.2
 
 
 class Camera:
@@ -19,8 +19,8 @@ class Camera:
         return self.cam_pos
 
     def zoom(self, value): # Приближение
-        if 1000 > self.zoom_value + value > 0:
-            self.zoom_value += value
+        f 3 > self.zoom_value * value > 0.1:
+            self.zoom_value *= value
 
     def get_zoom(self): # Взять приближение
         return self.zoom_value
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 if event.button == 4:
                     cam.zoom(ZOOM_SENSITIVITY)
                 elif event.button == 5:
-                    cam.zoom(-ZOOM_SENSITIVITY)
+                    cam.zoom(1 / ZOOM_SENSITIVITY)
             if event.type == pygame.KEYDOWN: # Зажатие клавиш
                 if event.key == ord('w'):
                     W = True
