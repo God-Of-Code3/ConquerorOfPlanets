@@ -21,7 +21,7 @@ class Camera:
             img = pygame.transform.scale(img, (int(v['width'] * size),
                                                int(v['height'] * size))) # Изменение размера картинки
             img = pygame.transform.rotate(img, v['rot']) # Поворот картинки
-            screen.blit(img, (SIZE[0] / 2 + (v['x'] - v['width'] / 2 - center[1]) * size,
+            screen.blit(img, (SIZE[0] / 2 + (v['x'] - v['width'] / 2 - center[0]) * size,
                               SIZE[1] / 2 + (v['y'] - v['height'] / 2 - center[1]) * size)) # Отрисовка
             
 # Дальше типа пример          
