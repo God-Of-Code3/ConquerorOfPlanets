@@ -2,26 +2,26 @@ import pygame
 
 
 class Camera:
-    def __init__(self, color):
+    def __init__(self, color): # Определения класса
         self.color = color
     
     def fill(self, screen):
-        screen.fill(self.color)
+        screen.fill(self.color) # Установка цвета фона
     
     def render(self):
-        pygame.display.flip()
+        pygame.display.flip() # Обновление экрана
         
     def drawing(self, screen, objects, center, size): # center - кортеж с x и y камеры
         # Отрисовка списков словарей
         for v in objects:
-            img = pygame.image.load(v['image'])
+            img = pygame.image.load(v['image']) # Открытие картинки
             img = pygame.transform.scale(img, (int(v['width'] * size),
-                                               int(v['height'] * size)))
-            img = pygame.transform.rotate(img, v['rot'])
+                                               int(v['height'] * size))) # Изменение размера картинки
+            img = pygame.transform.rotate(img, v['rot']) # Поворот картинки
             screen.blit(img, (center[0] + v['x'] * size,
-                              center[1] + v['y'] * size))
+                              center[1] + v['y'] * size)) # Отрисовка
             
-            
+# Дальше типа пример          
 '''if __name__ == '__main__':
     pygame.init()
     size = width, height = 500, 500
