@@ -13,13 +13,6 @@ def check_point(info, x, y):
     return math.sqrt((s_x - x) ** 2 + (s_y - y) ** 2) <= w
 
 
-class Planet:
-    def __init__(self, x, y, radius):
-        self.x = x
-        self.y = y
-        self.radius = radius
-
-
 class Starship:
     def __init__(self, x, y, width, height, ship_type, planet, health=1000, image="Ship1.png", polygon=[]):
         self.x = x  # Градус относительно "верха" планеты
@@ -42,15 +35,19 @@ class Starship:
         self.speed_x = 0  # Текущая угловая скорость
         self.speed_y = 0  # Текущая скорость удаления от планеты
         self.ship_speed_x = 0.1  # Угловая скорость для этого корабля
-        self.ship_speed_y = 1  # Скорость удаления от планеты для этого корабля
+        self.ship_speed_y = 0.1  # Скорость удаления от планеты для этого корабля
 
-    def accelerate(self, x_direction, y_direction):  # Ускорение/замедление
+    def accelerate_x(self, x_direction):  # Ускорение/замедление
         self.speed_x = self.ship_speed_x * x_direction  # Изменение параметров текущей скорости
-        self.speed_y = self.ship_speed_y * y_direction
+
+    def accelerate_y(self, y_direction):  # Ускорение/замедление
+        self.speed_y = self.ship_speed_y * y_direction  # Изменение параметров текущей скорости
 
     def move(self):  # Движение
-        self.x += self.speed_x  # Движение над планетой
+        self.x += self.speed_x / (self.y / self.height / 2) # Движение над планетой
         self.y += self.speed_y  # Движение от/к планете
+        if self.y < self.height:
+            self.y = self.height
 
     def get_my_polygon(self):
         abs_x, abs_y = self.get_real_coords()
@@ -87,6 +84,7 @@ class Starship:
         return data
 
 
+"""
 planet = Planet(250, 250, 0)
 starship = Starship(0, 110, 2, 5, "Ship1", planet)
 starship2 = Starship(45, 110, 2, 5, "Ship1", planet)
@@ -105,3 +103,4 @@ while True:
     starship2.x += 0.04
     pygame.display.flip()
     pygame.event.get()
+"""
