@@ -1,7 +1,7 @@
 import pygame
 
 
-SIZE = (1000, 1000)
+SIZE = (1500, 1000)
 SENSITIVITY = 2
 ZOOM_SENSITIVITY = 1.2
 

@@ -35,7 +35,7 @@ class Starship:
         self.speed_x = 0  # Текущая угловая скорость
         self.speed_y = 0  # Текущая скорость удаления от планеты
         self.ship_speed_x = 0.1  # Угловая скорость для этого корабля
-        self.ship_speed_y = 1  # Скорость удаления от планеты для этого корабля
+        self.ship_speed_y = 10  # Скорость удаления от планеты для этого корабля
         self.img = pygame.image.load(self.image)
 
     def accelerate_x(self, x_direction):  # Ускорение/замедление
@@ -45,7 +45,7 @@ class Starship:
         self.speed_y = self.ship_speed_y * y_direction  # Изменение параметров текущей скорости
 
     def move(self):  # Движение
-        self.x += self.speed_x / (self.y / self.height / 2) # Движение над планетой
+        self.x += self.speed_x / ((self.y + self.planet.radius) / (20 + self.planet.radius))  # Движение над планетой
         self.y += self.speed_y  # Движение от/к планете
         if self.y < self.height:
             self.y = self.height
@@ -81,6 +81,17 @@ class Starship:
         data["image"] = self.img
         data["width"] = self.width
         data["height"] = self.height
+        polygon = rotate_polygon(0, 0, [[-self.width / 2, -self.height / 2], [self.width / 2, -self.height / 2],
+                                        [self.width / 2, self.height / 2],
+                                        [-self.width / 2,self.height / 2]], (self.x - 270) % 360)
+        min_x = min(polygon, key=lambda x: x[0])
+        max_x = max(polygon, key=lambda x: x[0])
+        min_y = min(polygon, key=lambda x: x[1])
+        max_y = max(polygon, key=lambda x: x[1])
+        width = max_x[0] - min_x[0]
+        height = max_y[1] - min_y[1]
+        data["real_width"] = width
+        data["real_height"] = height
         data["rot"] = (self.x - 270) % 360
         return data
 
