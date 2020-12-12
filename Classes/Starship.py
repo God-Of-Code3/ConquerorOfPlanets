@@ -35,7 +35,8 @@ class Starship:
         self.speed_x = 0  # Текущая угловая скорость
         self.speed_y = 0  # Текущая скорость удаления от планеты
         self.ship_speed_x = 0.1  # Угловая скорость для этого корабля
-        self.ship_speed_y = 0.1  # Скорость удаления от планеты для этого корабля
+        self.ship_speed_y = 1  # Скорость удаления от планеты для этого корабля
+        self.img = pygame.image.load(self.image)
 
     def accelerate_x(self, x_direction):  # Ускорение/замедление
         self.speed_x = self.ship_speed_x * x_direction  # Изменение параметров текущей скорости
@@ -77,10 +78,10 @@ class Starship:
         data = dict()  # Словарь данных
         data["x"] = abs_x
         data["y"] = abs_y
-        data["image"] = self.image
+        data["image"] = self.img
         data["width"] = self.width
         data["height"] = self.height
-        data["rot"] = self.x % 360
+        data["rot"] = (self.x - 270) % 360
         return data
 
 

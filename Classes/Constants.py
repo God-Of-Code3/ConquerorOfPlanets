@@ -1,7 +1,7 @@
 STARSHIPS = {
     "Ship1": {
         "health": 1000,
-        "image": "ship1.png",
+        "image": "./Images/Starship1.png",
         "polygon": [
             [-45, -50],
             [-15, 50],

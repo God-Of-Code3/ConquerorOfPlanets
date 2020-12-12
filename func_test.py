@@ -1,53 +1,25 @@
-import math
-from shapely.geometry import Polygon
+import pygame
+from Classes.Math import *
+pygame.init()
+screen = pygame.display.set_mode((500, 500))
 
-
-def to_point(x1, y1, x2, y2):
-    if y1 == y2:
-        direction = 0 if x2 > x1 else 180
-    elif x1 == x2:
-        direction = 90 if y2 > y1 else 270
-    else:
-        direction = -math.atan((x2 - x1) / (y2 - y1)) / math.pi * 180 + 90
-        if y2 < y1:
-            direction += 180
-    if direction < 0:
-        direction = 360 + direction
-    return direction
-
-
-def rotate_polygon(x, y, points, a):
-    new_points = []
-    for point in points:
-        dist = math.hypot(point[0], point[1])
-        direction = to_point(0, 0, point[0], point[1]) + a
-        new_x = x + math.cos(math.pi / 180 * direction) * dist
-        new_y = y + math.sin(math.pi / 180 * direction) * dist
-        new_points.append([new_x, new_y])
-    return new_points
-
-
-def rotate_directional_polygon(x, y, points, a):
-    new_points = []
-    for point in points:
-        dist = point[1]
-        direction = point[0] + a
-        new_x = x + math.cos(math.pi / 180 * direction) * dist
-        new_y = y + math.sin(math.pi / 180 * direction) * dist
-        new_points.append([new_x, new_y])
-    return new_points
-
-
-def convert_to_direction(points):
-    new_points = []
-    for point in points:
-        dist = math.hypot(point[0], point[1])
-        direction = to_point(0, 0, point[0], point[1])
-        new_points.append([direction, dist])
-    return new_points
-
-
-def check_intersection(points, points2):
-    pol = Polygon(points.copy())
-    pol2 = Polygon(points2.copy())
-    return pol.intersects(pol2)
+angle = 0
+while True:
+    pygame.event.get()
+    screen.fill((0, 0, 0))
+    angle += 0.1
+    angle = angle % 360
+    pygame.draw.line(screen, (255, 255, 255), (0, 250), (500, 250), 2)
+    pygame.draw.line(screen, (255, 255, 255), (250, 0), (250, 500), 2)
+    img = pygame.image.load("./Images/Starship1.png")
+    img = pygame.transform.scale(img, (154, 80))
+    img = pygame.transform.rotate(img, angle)
+    polygon = rotate_polygon(0, 0, [[-77, -40], [77, -40], [77, 40], [-77, 40]], angle)
+    min_x = min(polygon, key=lambda x: x[0])
+    max_x = max(polygon, key=lambda x: x[0])
+    min_y = min(polygon, key=lambda x: x[1])
+    max_y = max(polygon, key=lambda x: x[1])
+    width = max_x[0] - min_x[0]
+    height = max_y[1] - min_y[1]
+    screen.blit(img, (250 - width / 2, 250 - height / 2))
+    pygame.display.flip()
