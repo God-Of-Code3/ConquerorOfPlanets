@@ -19,7 +19,7 @@ class Camera:
         return self.cam_pos
 
     def zoom(self, value):  # Приближение
-        if 3 > self.zoom_value * value > 0.1:
+        if 1.9 > self.zoom_value * value > 0.1:
             self.zoom_value *= value
 
     def get_zoom(self):  # Взять приближение
@@ -40,6 +40,23 @@ class Camera:
             img = pygame.transform.rotate(img, -v['rot'])  # Поворот картинки
             screen.blit(img, (SIZE[0] / 2 + (v['x'] - v['real_width'] / 2 - center[0]) * zoom,
                               SIZE[1] / 2 + (v['y'] - v['real_height'] / 2 - center[1]) * zoom))  # Отрисовка
+
+    def drawing_planet(self, screen, planet, center, zoom):  # center - кортеж с x и y камеры
+        # Отрисовка списков словарей
+        pygame.draw.circle(screen, planet.color, (int(SIZE[0] / 2 + (planet.x - center[0]) * zoom),
+                           int(SIZE[1] / 2 + (planet.y - center[1]) * zoom)), int(planet.radius *
+                                                                                                     zoom))
+
+    def drawing_polygon(self, screen, polygon, center, zoom):  # center - кортеж с x и y камеры
+        # Отрисовка списков словарей
+        new_pol = []
+        for point in polygon:
+            new_pol.append([
+                int(SIZE[0] / 2 + (point[0] - center[0]) * zoom),
+                int(SIZE[1] / 2 + (point[1] - center[1]) * zoom),
+            ])
+        pygame.draw.polygon(screen, (255, 255, 255), new_pol, 3)
+
 
 
 """

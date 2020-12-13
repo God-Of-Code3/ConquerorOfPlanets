@@ -51,3 +51,8 @@ def check_intersection(points, points2):
     pol = Polygon(points.copy())
     pol2 = Polygon(points2.copy())
     return pol.intersects(pol2)
+
+
+def check_point_intersection(points, point):
+    pol = Polygon(points)
+    return pol.contains(point)
