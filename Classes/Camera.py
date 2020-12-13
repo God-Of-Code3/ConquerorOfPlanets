@@ -34,12 +34,14 @@ class Camera:
     def drawing(self, screen, objects, center, zoom):  # center - кортеж с x и y камеры
         # Отрисовка списков словарей
         for v in objects:
-            img = v['image']  # Открытие картинки
-            img = pygame.transform.scale(img, (int(v['width'] * zoom),
-                                               int(v['height'] * zoom)))  # Изменение размера картинки
-            img = pygame.transform.rotate(img, -v['rot'])  # Поворот картинки
-            screen.blit(img, (SIZE[0] / 2 + (v['x'] - v['real_width'] / 2 - center[0]) * zoom,
-                              SIZE[1] / 2 + (v['y'] - v['real_height'] / 2 - center[1]) * zoom))  # Отрисовка
+            if 0 < (v['x'] - v['width'] - center[0]) * zoom and (v['x'] - center[0]) * zoom  < SIZE[0] and\
+                    0 < (v['y'] - v['height'] - center[1]) * zoom and (v['y'] - center[1]) * zoom < SIZE[1]:
+                img = v['image']  # Открытие картинки
+                img = pygame.transform.scale(img, (int(v['width'] * zoom),
+                                                   int(v['height'] * zoom)))  # Изменение размера картинки
+                img = pygame.transform.rotate(img, -v['rot'])  # Поворот картинки
+                screen.blit(img, (SIZE[0] / 2 + (v['x'] - v['real_width'] / 2 - center[0]) * zoom,
+                                  SIZE[1] / 2 + (v['y'] - v['real_height'] / 2 - center[1]) * zoom))  # Отрисовка
 
     def drawing_planet(self, screen, planet, center, zoom):  # center - кортеж с x и y камеры
         # Отрисовка списков словарей
@@ -48,15 +50,22 @@ class Camera:
                                                                                                      zoom))
 
     def drawing_polygon(self, screen, polygon, center, zoom):  # center - кортеж с x и y камеры
-        # Отрисовка списков словарей
-        new_pol = []
+        # Проверка на то, что объект внутри экрана
+        on_screen = False
         for point in polygon:
-            new_pol.append([
-                int(SIZE[0] / 2 + (point[0] - center[0]) * zoom),
-                int(SIZE[1] / 2 + (point[1] - center[1]) * zoom),
-            ])
-        pygame.draw.polygon(screen, (255, 255, 255), new_pol, 3)
-
+            if 0 < SIZE[0] / 2 + (point[0] - center[0]) * zoom) < SIZE[0] and\
+               0 < SIZE[1] / 2 + (point[1] - center[1]) * zoom < SIZE[1]:
+                on_screen = True
+                break
+        if on_screen:
+            # Отрисовка списков словарей
+            new_pol = []
+            for point in polygon:
+                new_pol.append([
+                    int(SIZE[0] / 2 + (point[0] - center[0]) * zoom),
+                    int(SIZE[1] / 2 + (point[1] - center[1]) * zoom),
+                ])
+            pygame.draw.polygon(screen, (255, 255, 255), new_pol, 3)
 
 
 """
