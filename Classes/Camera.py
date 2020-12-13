@@ -22,8 +22,11 @@ class Camera:
         if 1.9 > self.zoom_value * value > 0.1:
             self.zoom_value *= value
 
-    def get_zoom(self):  # Взять приближение
+    def get_zoom(self):  # Взять значение зума
         return self.zoom_value
+    
+    def пуе_upper_left_corner(self):  # Взять координаты левого верхнего угла камеры
+        return (SIZE[0] / 2 - (self.cam_pos[0] * self.zoom_value), SIZE[1] / 2 - (self.cam_pos[1] * self.zoom_value))
 
     def fill(self, screen):
         screen.fill(self.color)  # Установка цвета фона
@@ -57,6 +60,7 @@ class Camera:
                0 < SIZE[1] / 2 + (point[1] - center[1]) * zoom < SIZE[1]:
                 on_screen = True
                 break
+                
         if on_screen:
             # Отрисовка списков словарей
             new_pol = []
